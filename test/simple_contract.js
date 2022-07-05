@@ -28,4 +28,20 @@ contract('SimpleContract', (accounts) => {
         assert.equal(new_name, 'new name');
     });
 
+    it("Should check the type of events", async() => {
+        const result = await instance.changeName('new name');
+        truffleAssert.eventEmitted(result, 'NameEvent');
+    });
+
+    it('Should check the parameter of event', async() => {
+        const result = await instance.changeName('new name');
+        truffleAssert.eventEmitted(result, 'NameEvent', (event) => {
+            return event.evPram == 'new name';
+        });
+    })
+
+
+
+
+
 });
