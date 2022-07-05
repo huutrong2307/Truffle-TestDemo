@@ -1,4 +1,6 @@
 const SimpleContract = artifacts.require('SimpleContract');
+const truffleAssert = require('truffle-assertions');
+
 
 contract('SimpleContract', (accounts) => {
     let instance;
@@ -12,6 +14,18 @@ contract('SimpleContract', (accounts) => {
         assert.equal(name, 'my name');
     });
 
-    it("Should change the name")
+    it("Should change the name", async() => {
+        await instance.changeName('new name');
+        const new_name = await instance.getName();
+
+        assert.equal(new_name, 'new name');
+    });
+
+    it("Should only owner can change the name", async() => {
+        await truffleAssert.reverts(instance.changeName('Only modifier', { from: accounts[1] }));
+        const new_name = await instance.getName();
+
+        assert.equal(new_name, 'new name');
+    });
 
 });
